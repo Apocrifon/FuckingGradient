@@ -1,10 +1,9 @@
-﻿using System.Net.Http.Headers;
-
+﻿
 public class Program
 {
     public static void Main()
     {
-        var test = new Method(-1.4, -1.4, 0.190, 0.150);
+        var test = new Method(-1.4, -1.4);
         while (test.grad[^1] * 1000 > 0)
             test.MakeIter();
         test.Print();
@@ -14,16 +13,15 @@ public class Program
 
 public class Method
 {
-    readonly double h;
-    readonly double a;
     List<double> x1;
     List<double> x2;
     List<double> dx1;
     List<double> dx2;
+    List<double> h;
     public List<double> grad;
     List<double> funk;
 
-    public Method(double x1, double x2, double h, double a) 
+    public Method(double x1, double x2) 
     {
         this.x1 = new List<double> { x1 };
         this.x2 = new List<double> { x2 };
@@ -31,8 +29,7 @@ public class Method
         dx2 = new List<double>();
         grad = new List<double>();
         funk = new List<double>();
-        this.h = h;
-        this.a = a;
+        this.h = new List<double> { 0.5, 0.167 };
         CalcDx1();
         CalcDx2();
         CalcGrad();
@@ -40,10 +37,10 @@ public class Method
         CalcFirstIter();
     }
 
-    private void CalcFirstIter()
+    public void CalcFirstIter()
     {
-        x1.Add(x1.Last() - h * dx1.Last());
-        x2.Add(x2.Last() - h * dx2.Last());
+        x1.Add(x1.Last() - h[0] * dx1.Last());
+        x2.Add(x2.Last() - h[0] * dx2.Last());
         CalcDx1();
         CalcDx2();
         CalcGrad();
@@ -62,19 +59,19 @@ public class Method
 
     private void CalcGrad()
     {
-        grad.Add(Math.Round(Math.Sqrt(Math.Pow(dx1.Last(), 2) + Math.Pow(dx2.Last(), 2)), 3));
+        grad.Add(Math.Sqrt(Math.Pow(dx1.Last(), 2) + Math.Pow(dx2.Last(), 2)));
     }
 
     private void Funk() 
     {
-        funk.Add(Math.Round(2 * x1.Last() * x1.Last() + 2 * x2.Last() * x2.Last() + 2*x1.Last()*x2.Last() - 14 * x1.Last() - 12 * x2.Last() + 29, 3));
+        funk.Add(2 * x1.Last() * x1.Last() + 2 * x2.Last() * x2.Last() + 2*x1.Last()*x2.Last() - 14 * x1.Last() - 12 * x2.Last() + 29);
     }
 
 
     public void MakeIter()
     {
-        x1.Add(x1[^1] - a * (x1[^1] - x1[^2]) - h * dx1[^1]);
-        x2.Add(x2[^1] - a * (x2[^1] - x2[^2]) - h * dx2[^1]);
+        x1.Add(x1.Last() - h[1] * dx1.Last());
+        x2.Add(x2.Last() - h[1] * dx2.Last());
         CalcDx1();
         CalcDx2();
         CalcGrad();
@@ -84,9 +81,9 @@ public class Method
     public void Print()
     {
         var iter = 1;
-        foreach (var item in grad)
+        foreach (var item in x2)  // x2 меняешь на ту переменную которую нужно вывести.
         {
-            Console.WriteLine("{0} {1}",iter++, item);
+            Console.WriteLine("{0} {1}",iter++,Math.Round(item,3));
         }
     }
 
