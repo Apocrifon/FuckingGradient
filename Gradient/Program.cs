@@ -80,10 +80,11 @@ public class Method
 
     public void Print()
     {
-        var iter = 1;
-        foreach (var item in x2)  // x2 меняешь на ту переменную которую нужно вывести.
+        var iter = 0;
+        for (int i = 0; i < x1.Count; i++)
         {
-            Console.WriteLine("{0} {1}",iter++,Math.Round(item,3));
+            Console.WriteLine("{0}\t{1}\t{2}\t{3}", iter, Math.Round(x1[i],3), Math.Round(x2[i],3), Math.Round(grad[i],3));
+            iter++;
         }
     }
 
