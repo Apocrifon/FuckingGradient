@@ -64,12 +64,12 @@ public class Method
 
     private void CalcDx1()
     {
-        dx1.Add(Math.Round(a * 2 * x1.Last() + c * x2.Last() - d, 3));
+        dx1.Add(Math.Round(a * 2 * x1.Last() + c * x2.Last() + d, 3));
     }
 
     private void CalcDx2()
     {
-        dx2.Add(Math.Round(b * 2 * x2.Last() + c * x1.Last() - e, 3));
+        dx2.Add(Math.Round(b * 2 * x2.Last() + c * x1.Last() + e, 3));
     }
 
     private void CalcGrad()
